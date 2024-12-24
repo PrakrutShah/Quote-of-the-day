@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote of the Day</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="quote-box">
+        <h2>Quote of the Day</h2>
+        <blockquote id="quote">Loading....</blockquote>
+        <span id="author">Loading....</span>
+        <div>
+            <button type="button" onclick="getquote(api_url)">New Quote</button>
+            <button type="button" onclick="post()"><img src="instagram.jpg" alt="Post to Instagram">Post</button>
+        </div>
+    </div>
+
+    <script>
+        const quote = document.getElementById("quote");
+        const author = document.getElementById("author");
+        const api_url = "https://api.quotable.io/random";
+        
+        async function getquote(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const data = await response.json();
+                
+                quote.innerHTML = data.content;
+                author.innerHTML = data.author;
+            } catch (error) {
+                quote.innerHTML = "Error fetching quote.";
+                author.innerHTML = "";
+                console.error('There has been a problem with your fetch operation:', error);
+            }
+        }
+        
+        getquote(api_url);
+
+        function post() {
+            const quoteText = encodeURIComponent(quote.innerHTML);
+            const authorText = encodeURIComponent(author.innerHTML);
+            window.open(`https://instagram.com/intent/post?text=${quoteText} ------ By ${authorText}`, "Post Window", "width=600, height=300");
+        }
+    </script>
+    
+</body>
+</html>
